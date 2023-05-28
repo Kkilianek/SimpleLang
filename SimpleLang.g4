@@ -6,11 +6,11 @@ program: statement*;
 
 statement: assignment | input | output;
 
-assignment: ID '=' expression ';';
+assignment: ID '=' expression ';'  #assignmentStatement;
 
-input: 'read' ID ';';
+input: 'read' ID ';'               # readStatement;
 
-output: 'print' expression ';';
+output: 'print' expression ';'     # printStatement;
 
 expression: '(' expression ')'              # parensExpr
           | expression ('*' | '/') expression      # mulDivExpr
