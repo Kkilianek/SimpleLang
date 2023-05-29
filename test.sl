@@ -1,5 +1,8 @@
-read x;
-read y;
-read a;
-z = x + y + a + 4;
-print z;
+int x
+real y = 3.14
+read(x)
+int q = x + 4 * 5 - 8 / 10
+y = y + 4.1
+real wreal = y + 2.3 - 7.25 * 2.7 / 10.4
+print(q)
+print(wreal)
