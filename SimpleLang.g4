@@ -11,6 +11,8 @@ declaration: type ID ;
 
 type: 'int' | 'real';
 
+call_function: function_name '(' arguments ')';
+
 assignment: declaration '=' operation
             | ID '=' operation;
 
@@ -33,19 +35,27 @@ expr2:   INT            #int
        | '(' expr0 ')'        #par
 ;
 
-call_function: ID '(' arguments ')';
+function_name: defined_functions
+;
+
+defined_functions: READ | PRINT;
 
 arguments: value ',' arguments
         | value;
 
 value: ID | INT | REAL;
 
-NEWLINE: '\r'? '\n';
+READ : 'read';
 
-WS:   (' '|'\t')+ { skip(); }
-    ;
+PRINT : 'print';
+
 ID : ('a'..'z'|'A'..'Z')+;
 
 INT : '0'..'9'+;
 
 REAL : '0'..'9'+'.''0'..'9'+;
+
+NEWLINE: '\r'? '\n';
+
+WS:   (' '|'\t')+ { skip(); }
+    ;
