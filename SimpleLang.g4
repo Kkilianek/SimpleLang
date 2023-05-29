@@ -18,7 +18,9 @@ expression: '(' expression ')'              # parensExpr
           | ID                            # idExpr
           | INT                           # intExpr
           | FLOAT                         # floatExpr
-          | STRING                        # stringExpr;
+          | STRING                        # stringExpr
+          | '(' 'int' ')' expression       # intConversionExpr
+          | '(' 'float' ')' expression     # floatConversionExpr;
 
 ID: [a-zA-Z]+;
 INT: [0-9]+;
