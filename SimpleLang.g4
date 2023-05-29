@@ -1,30 +1,51 @@
 grammar SimpleLang;
 
-// Plik zawiera definicję gramatyki prostego języka programowania - SimpleLang
+prog: (statement? NEWLINE)*;
 
-program: statement*;
+statement: declaration
+        | call_function
+        | assignment
+        ;
 
-statement: assignment | input | output;
+declaration: type ID ;
 
-assignment: ID '=' expression ';'  #assignmentStatement;
+type: 'int' | 'real';
 
-input: 'read' ID ';'               # readStatement;
+assignment: declaration '=' operation
+            | ID '=' operation;
 
-output: 'print' expression ';'     # printStatement;
+operation: expr0 ;
 
-expression: '(' expression ')'              # parensExpr
-          | expression ('*' | '/') expression      # mulDivExpr
-          | expression ('+' | '-') expression      # addSubExpr
-          | ID                            # idExpr
-          | INT                           # intExpr
-          | FLOAT                         # floatExpr
-          | STRING                        # stringExpr
-          | '(' 'int' ')' expression       # intConversionExpr
-          | '(' 'float' ')' expression     # floatConversionExpr;
 
-ID: [a-zA-Z]+;
-INT: [0-9]+;
-FLOAT: [0-9]+'.'[0-9]+;
-STRING: '"' .*? '"';
+expr0:  expr1            #single0
+      | expr1 '+' expr0        #add
+      | expr1 '-' expr0        #del
+;
 
-WS: [ \t\r\n]+ -> skip;
+expr1:  expr2            #single1
+      | expr2 '*' expr0    #mult
+      | expr2 '/' expr0    #dif
+;
+
+expr2:   INT            #int
+       | REAL            #real
+       | ID              #id
+       | '(' expr0 ')'        #par
+;
+
+call_function: ID '(' arguments ')';
+
+arguments: value ',' arguments
+        | value;
+
+value: ID | INT | REAL;
+
+NEWLINE: '\r'? '\n';
+
+WS:   (' '|'\t')+ { skip(); }
+    ;
+ID : ('a'..'z'|'A'..'Z')+;
+
+INT : '0'..'9'+;
+
+REAL : '0'..'9'+'.''0'..'9'+;
