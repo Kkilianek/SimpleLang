@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.tree.*;
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        ANTLRFileStream input = new ANTLRFileStream(args[0]);
+        CharStream input = CharStreams.fromFileName(args[0]);
 
         SimpleLangLexer lexer = new SimpleLangLexer(input);
 
