@@ -13,7 +13,7 @@ public class Main {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         SimpleLangParser parser = new SimpleLangParser(tokens);
 
-        ParseTree tree = parser.program();
+        ParseTree tree = parser.prog();
 
         //System.out.println(tree.toStringTree(parser));
 
