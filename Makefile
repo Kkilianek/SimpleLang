@@ -3,6 +3,7 @@
 ANTLR=/usr/local/lib/antlr-4.9.3-complete.jar
 
 all: generate compile test
+all-clean: all clean
 
 generate:
 	java -jar $(ANTLR) -o output SimpleLang.g4
