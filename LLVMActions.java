@@ -8,6 +8,14 @@ class Value {
         this.type = type;
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "Value{" +
+                "type='" + type + '\'' +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }
 
 public class LLVMActions extends SimpleLangBaseListener {
