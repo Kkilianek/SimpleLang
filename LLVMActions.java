@@ -12,17 +12,13 @@ class Value {
 
 public class LLVMActions extends SimpleLangBaseListener {
 
-    HashMap<String, String> variables = new HashMap<String, String>();
-    HashSet<String> types = new HashSet<String>() {{
+    HashMap<String, String> variables = new HashMap<>();
+    HashSet<String> types = new HashSet<>() {{
         add("int");
         add("real");
     }};
-    HashSet<String> definedFunctions = new HashSet<String>() {{
-        add("print");
-        add("read");
-    }};
-    List<Value> argumentsList = new ArrayList<Value>();
-    Stack<Value> stack = new Stack<Value>();
+    List<Value> argumentsList = new ArrayList<>();
+    Stack<Value> stack = new Stack<>();
 
     @Override
     public void exitAssignment(SimpleLangParser.AssignmentContext ctx) {
