@@ -20,12 +20,12 @@ class LLVMGenerator {
     }
 
     static void readInt(String id) {
-        main_text += "%" + reg + " = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @strs, i32 0, i32 0), i32* %" + id + ")\n";
+        main_text += "%" + reg + " = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @strs, i32 0, i32 0), i32* %" + id + ")\n";
         reg++;
     }
 
     static void readReal(String id) {
-        main_text += "%" + reg + " = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strsd, i32 0, i32 0), double* %" + id + ")\n";
+        main_text += "%" + reg + " = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strsd, i32 0, i32 0), double* %" + id + ")\n";
         reg++;
     }
 
@@ -100,7 +100,7 @@ class LLVMGenerator {
     static String generate() {
         String text = "";
         text += "declare i32 @printf(i8*, ...)\n";
-        text += "declare i32 @__isoc99_scanf(i8*, ...)\n";
+        text += "declare i32 @scanf(i8*, ...)\n";
         text += "@strp = constant [4 x i8] c\"%d\\0A\\00\"\n";
         text += "@strpd = constant [4 x i8] c\"%f\\0A\\00\"\n";
         text += "@strs = constant [3 x i8] c\"%d\\00\"\n";
