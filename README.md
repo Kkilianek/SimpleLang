@@ -59,7 +59,7 @@ Składnia wywołania funkcji:
 print(<zmienna wypisywana>)
 ``` 
 #### Funkcja _read_
-Funkcja pozwala na wpisywanie wartości zmiennych wprowadzony przez użytkownika typu _int_, _real_, _bool_.
+Funkcja pozwala na wpisywanie wartości zmiennych wprowadzony przez użytkownika typu _int_, _real_, (_bool_)*.
 
 Składnia wywołania funkcji:
 ```$xslt
