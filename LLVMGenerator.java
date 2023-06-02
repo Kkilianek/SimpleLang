@@ -40,6 +40,8 @@ class LLVMGenerator {
     static void readBool(String id) {
         main_text += "%" + reg + " = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @strsb, i32 0, i32 0), i1* %" + id + ")\n";
         reg++;
+        main_text += "%" + reg + " = trunc i32 %" + (reg - 1) + " to i1\n";
+        reg++;
     }
 
     static void declareInt(String id) {
@@ -169,6 +171,7 @@ class LLVMGenerator {
         text += "@strpd = constant [4 x i8] c\"%f\\0A\\00\"\n";
         text += "@strs = constant [3 x i8] c\"%d\\00\"\n";
         text += "@strsd = constant [4 x i8] c\"%lf\\00\"\n";
+        text += "@strsb = constant [3 x i8] c\"%d\\00\"\n";
         text += header_text;
         text += "define i32 @main() nounwind{\n";
         text += main_text;
