@@ -24,6 +24,7 @@ public class LLVMActions extends SimpleLangBaseListener {
     HashSet<String> types = new HashSet<>() {{
         add("int");
         add("real");
+        add("long");
     }};
     List<Value> argumentsList = new ArrayList<>();
     Stack<Value> stack = new Stack<>();
@@ -49,6 +50,9 @@ public class LLVMActions extends SimpleLangBaseListener {
         if (v.type.equals("real")) {
             LLVMGenerator.assignReal(ID, v.value);
         }
+        if (v.type.equals("long")) {
+            LLVMGenerator.assignLong(ID, v.value);
+        }
     }
 
     @Override
@@ -62,6 +66,8 @@ public class LLVMActions extends SimpleLangBaseListener {
                     LLVMGenerator.declareInt(ID);
                 } else if (TYPE.equals("real")) {
                     LLVMGenerator.declareReal(ID);
+                } else if (TYPE.equals("long")) {
+                    LLVMGenerator.declareLong(ID);
                 }
             } else {
                 ctx.getStart().getLine();
@@ -92,6 +98,8 @@ public class LLVMActions extends SimpleLangBaseListener {
                         LLVMGenerator.printInt(ID);
                     } else if (type.equals("real")) {
                         LLVMGenerator.printReal(ID);
+                    } else if (type.equals("long")) {
+                        LLVMGenerator.printLong(ID);
                     }
                 } else {
                     ctx.getStart().getLine();
@@ -112,6 +120,8 @@ public class LLVMActions extends SimpleLangBaseListener {
                         LLVMGenerator.readInt(ID);
                     } else if (type.equals("real")) {
                         LLVMGenerator.readReal(ID);
+                    } else if (type.equals("long")) {
+                        LLVMGenerator.readLong(ID);
                     }
                 } else {
                     ctx.getStart().getLine();
@@ -145,6 +155,13 @@ public class LLVMActions extends SimpleLangBaseListener {
         } catch (NullPointerException ignored) {
 
         }
+
+        try {
+            argumentsList.add(new Value("long", ctx.LONG().getText()));
+
+        } catch (NullPointerException ignored) {
+
+        }
     }
 
     @Override
@@ -158,6 +175,11 @@ public class LLVMActions extends SimpleLangBaseListener {
     }
 
     @Override
+    public void exitLong(SimpleLangParser.LongContext ctx) {
+        stack.push(new Value("real", ctx.LONG().getText()));
+    }
+
+    @Override
     public void exitId(SimpleLangParser.IdContext ctx) {
         String ID = ctx.ID().getText();
         if (variables.containsKey(ID)) {
@@ -167,6 +189,8 @@ public class LLVMActions extends SimpleLangBaseListener {
                 reg = LLVMGenerator.loadInt(ID);
             } else if (type.equals("real")) {
                 reg = LLVMGenerator.loadReal(ID);
+            } else if (type.equals("long")) {
+                reg = LLVMGenerator.loadLong(ID);
             }
             stack.push(new Value(type, "%" + reg));
         } else {
@@ -187,6 +211,10 @@ public class LLVMActions extends SimpleLangBaseListener {
                 LLVMGenerator.addReal(v1.value, v2.value);
                 stack.push(new Value("real", "%" + (LLVMGenerator.reg - 1)));
             }
+            if (v1.type.equals("long")) {
+                LLVMGenerator.addLong(v1.value, v2.value);
+                stack.push(new Value("long", "%" + (LLVMGenerator.reg - 1)));
+            }
         } else {
             error(ctx.getStart().getLine(), "add type mismatch");
         }
@@ -204,6 +232,10 @@ public class LLVMActions extends SimpleLangBaseListener {
             if (v1.type.equals("real")) {
                 LLVMGenerator.mulReal(v1.value, v2.value);
                 stack.push(new Value("real", "%" + (LLVMGenerator.reg - 1)));
+            }
+            if (v1.type.equals("long")) {
+                LLVMGenerator.mulLong(v1.value, v2.value);
+                stack.push(new Value("long", "%" + (LLVMGenerator.reg - 1)));
             }
         } else {
             error(ctx.getStart().getLine(), "multiplication type mismatch");
@@ -223,6 +255,10 @@ public class LLVMActions extends SimpleLangBaseListener {
                 LLVMGenerator.subReal(v2.value, v1.value);
                 stack.push(new Value("real", "%" + (LLVMGenerator.reg - 1)));
             }
+            if (v1.type.equals("long")) {
+                LLVMGenerator.subLong(v2.value, v1.value);
+                stack.push(new Value("long", "%" + (LLVMGenerator.reg - 1)));
+            }
         } else {
             error(ctx.getStart().getLine(), "subtraction type mismatch");
         }
@@ -240,6 +276,10 @@ public class LLVMActions extends SimpleLangBaseListener {
             if (v1.type.equals("real")) {
                 LLVMGenerator.divReal(v2.value, v1.value);
                 stack.push(new Value("real", "%" + (LLVMGenerator.reg - 1)));
+            }
+            if (v1.type.equals("long")) {
+                LLVMGenerator.divLong(v2.value, v1.value);
+                stack.push(new Value("long", "%" + (LLVMGenerator.reg - 1)));
             }
         } else {
             error(ctx.getStart().getLine(), "division type mismatch");

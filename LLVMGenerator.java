@@ -19,6 +19,13 @@ class LLVMGenerator {
         reg++;
     }
 
+    static void printLong(String id) {
+        main_text += "%" + reg + " = load i64, i64* %" + id + "\n";
+        reg++;
+        main_text += "%" + reg + " = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpd, i32 0, i32 0), i64 %" + (reg - 1) + ")\n";
+        reg++;
+    }
+
     static void readInt(String id) {
         main_text += "%" + reg + " = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @strs, i32 0, i32 0), i32* %" + id + ")\n";
         reg++;
@@ -26,6 +33,11 @@ class LLVMGenerator {
 
     static void readReal(String id) {
         main_text += "%" + reg + " = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strsd, i32 0, i32 0), double* %" + id + ")\n";
+        reg++;
+    }
+
+    static void readLong(String id) {
+        main_text += "%" + reg + " = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strsd, i32 0, i32 0), long* %" + id + ")\n";
         reg++;
     }
 
@@ -37,12 +49,20 @@ class LLVMGenerator {
         main_text += "%" + id + " = alloca double\n";
     }
 
+    static void declareLong(String id) {
+        main_text += "%" + id + " = alloca i64\n";
+    }
+
     static void assignInt(String id, String value) {
         main_text += "store i32 " + value + ", i32* %" + id + "\n";
     }
 
     static void assignReal(String id, String value) {
         main_text += "store double " + value + ", double* %" + id + "\n";
+    }
+
+    static void assignLong(String id, String value) {
+        main_text += "store i64 " + value + ", i64* %" + id + "\n";
     }
 
     static void addInt(String val1, String val2) {
@@ -52,6 +72,11 @@ class LLVMGenerator {
 
     static void addReal(String val1, String val2) {
         main_text += "%" + reg + " = fadd double " + val1 + ", " + val2 + "\n";
+        reg++;
+    }
+
+    static void addLong(String val1, String val2) {
+        main_text += "%" + reg + " = add i64 " + val1 + ", " + val2 + "\n";
         reg++;
     }
 
@@ -65,6 +90,11 @@ class LLVMGenerator {
         reg++;
     }
 
+    static void subLong(String val1, String val2) {
+        main_text += "%" + reg + " = sub i64 " + val1 + ", " + val2 + "\n";
+        reg++;
+    }
+
     static void mulInt(String val1, String val2) {
         main_text += "%" + reg + " = mul i32 " + val1 + ", " + val2 + "\n";
         reg++;
@@ -72,6 +102,11 @@ class LLVMGenerator {
 
     static void mulReal(String val1, String val2) {
         main_text += "%" + reg + " = fmul double " + val1 + ", " + val2 + "\n";
+        reg++;
+    }
+
+    static void mulLong(String val1, String val2) {
+        main_text += "%" + reg + " = mul i64 " + val1 + ", " + val2 + "\n";
         reg++;
     }
 
@@ -85,6 +120,11 @@ class LLVMGenerator {
         reg++;
     }
 
+    static void divLong(String val1, String val2) {
+        main_text += "%" + reg + " = sdiv i64 " + val1 + ", " + val2 + "\n";
+        reg++;
+    }
+
     static int loadInt(String id) {
         main_text += "%" + reg + " = load i32, i32* %" + id + "\n";
         reg++;
@@ -93,6 +133,12 @@ class LLVMGenerator {
 
     static int loadReal(String id) {
         main_text += "%" + reg + " = load double, double* %" + id + "\n";
+        reg++;
+        return reg - 1;
+    }
+
+    static int loadLong(String id) {
+        main_text += "%" + reg + " = load i64, i64* %" + id + "\n";
         reg++;
         return reg - 1;
     }

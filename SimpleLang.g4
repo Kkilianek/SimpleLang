@@ -9,7 +9,7 @@ statement: declaration
 
 declaration: type ID ;
 
-type: 'int' | 'real';
+type: 'int' | 'real' | 'long';
 
 call_function: function_name '(' arguments ')';
 
@@ -36,7 +36,8 @@ expr3:  expr4            #single3
 ;
 
 expr4:   INT            #int
-       | REAL            #real
+       | REAL           #real
+       | LONG           #long
        | ID              #id
        | '(' expr0 ')'        #par
 ;
@@ -49,7 +50,7 @@ defined_functions: READ | PRINT;
 arguments: value ',' arguments
         | value;
 
-value: ID | INT | REAL;
+value: ID | INT | REAL | LONG;
 
 READ : 'read';
 
@@ -57,9 +58,11 @@ PRINT : 'print';
 
 ID : ('a'..'z'|'A'..'Z')+;
 
-INT : '0'..'9'+;
+INT : [0-9]+;
 
-REAL : '0'..'9'+'.''0'..'9'+;
+LONG : [0-9]+;
+
+REAL : [0-9]+'.'[0-9]+;
 
 NEWLINE: '\r'? '\n';
 
