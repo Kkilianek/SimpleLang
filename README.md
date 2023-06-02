@@ -52,14 +52,14 @@ Dostępne są 2 funkcje wbudowane:
 - read() - odpowiadający za wczytywanie wartości zmiennych
 
 #### Funkcja _print_
-Funkcja pozwala na wypisywanie wartości zmiennych typu _int_, _real_, _char_ oraz ich odpowiedników tablicowych (pojedyńcze elementy).
+Funkcja pozwala na wypisywanie wartości zmiennych typu _int_, _real_, _bool_ oraz ich odpowiedników tablicowych (pojedyńcze elementy).
 
 Składnia wywołania funkcji:
 ```$xslt
 print(<zmienna wypisywana>)
 ``` 
 #### Funkcja _read_
-Funkcja pozwala na wpisywanie wartości zmiennych wprowadzony przez użytkownika typu _int_, _real_, _char_.
+Funkcja pozwala na wpisywanie wartości zmiennych wprowadzony przez użytkownika typu _int_, _real_, _bool_.
 
 Składnia wywołania funkcji:
 ```$xslt
