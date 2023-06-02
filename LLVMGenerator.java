@@ -22,7 +22,7 @@ class LLVMGenerator {
     static void printLong(String id) {
         main_text += "%" + reg + " = load i64, i64* %" + id + "\n";
         reg++;
-        main_text += "%" + reg + " = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strpd, i32 0, i32 0), i64 %" + (reg - 1) + ")\n";
+        main_text += "%" + reg + " = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @strpl, i32 0, i32 0), i64 %" + (reg - 1) + ")\n";
         reg++;
     }
 
@@ -37,7 +37,7 @@ class LLVMGenerator {
     }
 
     static void readLong(String id) {
-        main_text += "%" + reg + " = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @strsd, i32 0, i32 0), long* %" + id + ")\n";
+        main_text += "%" + reg + " = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @strsl, i32 0, i32 0), i64* %" + id + ")\n";
         reg++;
     }
 
@@ -148,6 +148,8 @@ class LLVMGenerator {
         text += "declare i32 @printf(i8*, ...)\n";
         text += "declare i32 @scanf(i8*, ...)\n";
         text += "@strp = constant [4 x i8] c\"%d\\0A\\00\"\n";
+        text += "@strpl = constant [5 x i8] c\"%ld\\0A\\00\"\n";
+        text += "@strsl = constant [5 x i8] c\"%ld\\00\"\n";
         text += "@strpd = constant [4 x i8] c\"%f\\0A\\00\"\n";
         text += "@strs = constant [3 x i8] c\"%d\\00\"\n";
         text += "@strsd = constant [4 x i8] c\"%lf\\00\"\n";
