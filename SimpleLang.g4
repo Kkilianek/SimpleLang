@@ -6,11 +6,24 @@ block: (statement? NEWLINE)*;
 
 statement: declaration
         | call_function
-        | assignment;
+        | assignment
+        | ifblock
+        | loopblock
+        ;
+//LOOP
+loopblock: LOOP condition BEGIN blockfor ENDLOOP;
+
+blockfor: block;
 
 // CONDITIONS
+ifblock: IF condition BEGIN blockif ENDIF ELSE blockelse ENDELSE;
 
-condition: ID if_operation comparable_value;
+blockif: block;
+
+blockelse: block;
+
+condition: ID if_operation comparable_value
+            | ID;
 
 if_operation: EQUALS #eq
         | NOTEQUALS #neq
@@ -91,6 +104,8 @@ GREATER: '>';
 LESS: '<';
 LESSTHAN: '<=';
 GREATERTHAN: '>=';
+LOOP: 'loop';
+ENDLOOP: 'endloop';
 
 AND: '&&';
 OR: '||';
