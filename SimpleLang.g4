@@ -1,6 +1,6 @@
 grammar SimpleLang;
 
-prog: block;
+prog: (function? NEWLINE)* block;
 
 block: (statement? NEWLINE)*;
 
@@ -26,12 +26,12 @@ condition: ID if_operation comparable_value
             | ID;
 
 if_operation: EQUALS #eq
-        | NOTEQUALS #neq
-        | LESS #ls
-        | GREATER #gr
-        | LESSTHAN #lst
-        | GREATERTHAN #grt
-        ;
+      | NOTEQUALS #neq
+      | LESS #ls
+      | GREATER #gr
+      | LESSTHAN #lst
+      | GREATERTHAN #grt
+      ;
 
 // VARIABLES AND OPERATIONS
 
@@ -39,8 +39,10 @@ type: INT_TYPE | REAL_TYPE | BOOL_TYPE;
 
 declaration: type ID;
 
-assignment: declaration '=' operation
-            | ID '=' operation;
+assignment: declaration '=' operation     #declarationAssignment
+      | ID '=' call_function              #functionAssignment
+      | ID '=' operation                  #idAssignment
+;  
 
 operation: expr0    #expression;
 
@@ -77,12 +79,23 @@ expr5:   INT            #int
 
 //FUNCTIONS
 
+function: type FUNCTION ID '(' fparams ')' BEGIN fblock returnstatement ENDFUNCTION;
+
+returnstatement: RETURN ID NEWLINE;
+
+fblock: block;
+
+fparams: type ID ',' fparams
+            | type ID
+            | /* epsilon */
+            ;
+
 call_function: function_name '(' arguments ')';
 
 function_name: defined_functions
 ;
 
-defined_functions: READ | PRINT;
+defined_functions: READ | PRINT | ID;
 
 arguments: value ',' arguments
         | value;
@@ -106,6 +119,9 @@ LESSTHAN: '<=';
 GREATERTHAN: '>=';
 LOOP: 'loop';
 ENDLOOP: 'endloop';
+FUNCTION: 'function';
+ENDFUNCTION: 'endfunction';
+RETURN: 'return';
 
 AND: '&&';
 OR: '||';

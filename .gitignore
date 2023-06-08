@@ -23,7 +23,8 @@
 hs_err_pid*
 replay_pid*
 
-Makefile
+# representation files
+*.ll
 
 .vscode/
 .idea/
