@@ -467,7 +467,7 @@ public class LLVMActions extends SimpleLangBaseListener {
                         type2 = variables.get(value);
                     }
                     if (type1.equals(type2)) {
-                        String operation_text = "";
+                        String operation_text;
                         switch (operation) {
                             case "==":
                                 operation_text = "eq";
@@ -521,7 +521,7 @@ public class LLVMActions extends SimpleLangBaseListener {
                     if ((type.equals("int") && value.contains("\\.")) || (type.equals("real") && !value.contains("\\."))) {
                         error(ctx.getStart().getLine(), "wrong type comparison");
                     }
-                    String operation_text = "";
+                    String operation_text;
                     switch (operation) {
                         case "==":
                             operation_text = "eq";
@@ -602,7 +602,7 @@ public class LLVMActions extends SimpleLangBaseListener {
         global = false;
         String id = ctx.ID().getText();
         String type = ctx.type().getText();
-        functions.put(id, new ArrayList<String>());
+        functions.put(id, new ArrayList<>());
         functions.get(id).add(type);
         if (type.equals("int")) {
             type = "i32";
@@ -619,10 +619,7 @@ public class LLVMActions extends SimpleLangBaseListener {
             String paramType = fp.type().getText();
             variables.put(paramId, paramType);
             functions.get(id).add(paramType);
-            boolean last = false;
-            if (nfp == null) {
-                last = true;
-            }
+            boolean last = nfp == null;
             if (paramType.equals("int")) {
                 paramType = "i32";
             } else if (paramType.equals("real")) {
@@ -652,7 +649,7 @@ public class LLVMActions extends SimpleLangBaseListener {
             error(ctx.getStart().getLine(), "unsupported return parameter");
         }
         LLVMGenerator.functionend(TYPE);
-        variables = new HashMap<String, String>();
+        variables = new HashMap<>();
         global = true;
     }
 
