@@ -67,7 +67,7 @@ read(<zmienna wpisywana>)
 
 ## ETAP 2.
 
-Instrukcje warunkowe
+### Instrukcje warunkowe
 
 Instrukcja warunkowa pozwala na sterowanie przebiegiem działania programu. Operacje dozowlone w warunku to:
 - == - równość
@@ -76,7 +76,7 @@ Instrukcja warunkowa pozwala na sterowanie przebiegiem działania programu. Oper
 - <= - mniejsze równe
 - /> - większe
 - />= - większe równe
-```
+
 Składnia instrukcji warunkowej:
 
 ```$xslt
@@ -100,7 +100,8 @@ endif else
 x = 4
 endelse
 ```
-### Pętla
+
+### Pętle
 Składania pętli:
 ```$xslt
 loop <warunek> begin
@@ -120,7 +121,8 @@ endloop
 Pętle wymagają podania zadeklarowanej wcześniej zmiennej, która będzie zwiększana
 przed każdym przejściem pętli. Zmienna ta musi być typu `int`. Możliwe jest podanie dowolnego
 warunku zakończenia pętli z tych dostępnych w instrukcji warunkowej.
-### Funkcja
+
+### Funkcje
 Składnia funkcji:
 ```$xslt
 <typ zwracany> function <nazwa funkcji> (<typ argumentu> <argument>, ...) begin
