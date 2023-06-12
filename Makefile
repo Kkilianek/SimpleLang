@@ -12,7 +12,7 @@ compile:
 	javac -cp $(ANTLR):output:. Main.java
 
 test:
-	java -cp $(ANTLR):output:. Main test_if.sl > test.ll
+	java -cp $(ANTLR):output:. Main test_loops.sl > test.ll
 	lli-14 test.ll
 
 clean:

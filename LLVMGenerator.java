@@ -8,7 +8,7 @@ class LLVMGenerator {
     static int main_tmp = 1;
     static int reg = 1;
     static int br = 0;
-    static Stack<Integer> brstack = new Stack<Integer>();
+    static Stack<Integer> brstack = new Stack<>();
 
     static void printInt(String id) {
         buffer += "%" + reg + " = load i32, i32* " + id + "\n";
@@ -202,14 +202,14 @@ class LLVMGenerator {
         buffer += "end" + b + ":\n";
     }
 
-    static void loopstart(String id/*, String value, String cond*/) {
+    static void loopstart(String id) {
         br++;
         buffer += "br label %cond" + br + "\n";
         buffer += "cond" + br + ":\n";
 
         int tmp = loadInt(id);
-        addInt("%" + Integer.toString(tmp), "1");
-        assignInt(id, "%" + Integer.toString(reg - 1));
+        addInt("%" + tmp, "1");
+        assignInt(id, "%" + (reg - 1));
     }
 
     static void loopblockstart() {

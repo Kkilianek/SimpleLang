@@ -584,16 +584,31 @@ public class LLVMActions extends SimpleLangBaseListener {
     @Override
     public void enterLoopblock(SimpleLangParser.LoopblockContext ctx) {
         String ID = ctx.condition().getChild(0).getText();
+        if (globalVariables.containsKey(ID) || variables.containsKey(ID)) {
+            String type = "";
+            if (variables.containsKey(ID)) {
+                type = variables.get(ID);
+            } else if (globalVariables.containsKey(ID)) {
+                type = globalVariables.get(ID);
+            }
+            if (!type.equals("int")) {
+                error(ctx.getStart().getLine(), "unsupported type");
+            }
+        } else {
+            error(ctx.getStart().getLine(), "variable not defined");
+        }
         LLVMGenerator.loopstart(resolveScope(ID));
     }
 
     @Override
     public void enterBlockfor(SimpleLangParser.BlockforContext ctx) {
+        global = false;
         LLVMGenerator.loopblockstart();
     }
 
     @Override
     public void exitBlockfor(SimpleLangParser.BlockforContext ctx) {
+        global = true;
         LLVMGenerator.loopend();
     }
 
