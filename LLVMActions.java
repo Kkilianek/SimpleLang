@@ -28,12 +28,7 @@ public class LLVMActions extends SimpleLangBaseListener {
         add("bool");
     }};
 
-    HashSet<String> definedFunctions = new HashSet<String>() {{
-        add("print");
-        add("read");
-    }};
-
-    HashMap<String,ArrayList<String>> functions = new HashMap<String,ArrayList<String>>();
+    HashMap<String, ArrayList<String>> functions = new HashMap<>();
 
     List<Value> argumentsList = new ArrayList<>();
     Stack<Value> stack = new Stack<>();
@@ -104,9 +99,9 @@ public class LLVMActions extends SimpleLangBaseListener {
     }
 
     @Override
-    public void exitDeclarationAssignment(SimpleLangParser.DeclarationAssignmentContext ctx){
+    public void exitDeclarationAssignment(SimpleLangParser.DeclarationAssignmentContext ctx) {
         String ID = ctx.declaration().getChild(1).getText();
-    
+
         if (!variables.containsKey(ID) && !globalVariables.containsKey(ID)) {
             error(ctx.getStart().getLine(), "variable not declared");
         }
@@ -134,7 +129,7 @@ public class LLVMActions extends SimpleLangBaseListener {
     @Override
     public void exitIdAssignment(SimpleLangParser.IdAssignmentContext ctx) {
         String ID = ctx.ID().getText();
-    
+
         if (!variables.containsKey(ID) && !globalVariables.containsKey(ID)) {
             error(ctx.getStart().getLine(), "variable not declared");
         }
@@ -231,37 +226,37 @@ public class LLVMActions extends SimpleLangBaseListener {
                 }
             } else {
                 error(ctx.getStart().getLine(), ", to many arguments in function read. Expected 1, Got: " + argumentsList.size());
-            } 
+            }
         } else {
             ArrayList<String> args = functions.get(FUNC_NAME);
-            if(args == null) {
+            if (args == null) {
                 error(ctx.getStart().getLine(), ", no such function: " + FUNC_NAME);
             }
-            if(argumentsList.size() != args.size()-1){
+            if (argumentsList.size() != args.size() - 1) {
                 error(ctx.getStart().getLine(), ", wrong number of arguments");
             }
-            if(args.get(0).equals("int")){
+            if (args.get(0).equals("int")) {
                 LLVMGenerator.call(FUNC_NAME, "i32");
-            } else if(args.get(0).equals("real")){
+            } else if (args.get(0).equals("real")) {
                 LLVMGenerator.call(FUNC_NAME, "double");
             } else {
                 error(ctx.getStart().getLine(), ", invalid type");
             }
             boolean last = false;
-            for(int i = 0; i < argumentsList.size(); i++){
-                if(i == argumentsList.size()-1){
+            for (int i = 0; i < argumentsList.size(); i++) {
+                if (i == argumentsList.size() - 1) {
                     last = true;
                 }
                 Value argument = argumentsList.get(i);
                 String argType = variables.get(argument.value);
-                if(argType == null){
+                if (argType == null) {
                     argType = globalVariables.get(argument.value);
                 }
-                String requiredArg = args.get(i+1);
-                if(argType.equals(requiredArg)){
-                    if(argType.equals("int")){
+                String requiredArg = args.get(i + 1);
+                if (argType.equals(requiredArg)) {
+                    if (argType.equals("int")) {
                         argType = "i32";
-                    } else if(argType.equals("real")){
+                    } else if (argType.equals("real")) {
                         argType = "double";
                     } else {
                         error(ctx.getStart().getLine(), "wrong type");
@@ -277,15 +272,15 @@ public class LLVMActions extends SimpleLangBaseListener {
     public void exitFunctionAssignment(SimpleLangParser.FunctionAssignmentContext ctx) {
         String id = ctx.ID().getText();
         String type = variables.get(id);
-        if(type == null){
+        if (type == null) {
             type = globalVariables.get(id);
         }
-        if(type == null){
+        if (type == null) {
             error(ctx.getStart().getLine(), "variable not defined");
         }
-        if(type.equals("int")){
+        if (type.equals("int")) {
             LLVMGenerator.callfinal(resolveScope(id), "i32");
-        } else if(type.equals("real")){
+        } else if (type.equals("real")) {
             LLVMGenerator.callfinal(resolveScope(id), "double");
         } else {
             error(ctx.getStart().getLine(), "wrong type");
@@ -425,16 +420,24 @@ public class LLVMActions extends SimpleLangBaseListener {
 
     @Override
     public void enterBlockif(SimpleLangParser.BlockifContext ctx) {
+        global = false;
         LLVMGenerator.ifstart();
     }
 
     @Override
     public void exitBlockif(SimpleLangParser.BlockifContext ctx) {
+        global = true;
         LLVMGenerator.ifend();
     }
 
     @Override
+    public void enterBlockelse(SimpleLangParser.BlockelseContext ctx) {
+        global = false;
+    }
+
+    @Override
     public void exitBlockelse(SimpleLangParser.BlockelseContext ctx) {
+        global = true;
         LLVMGenerator.elseend();
     }
 
@@ -471,43 +474,43 @@ public class LLVMActions extends SimpleLangBaseListener {
                                 break;
                             case "!=":
                                 operation_text = "ne";
-                            break;
-                        case "<":
-                            operation_text = "slt";
-                            break;
-                        case ">":
-                            operation_text = "sgt";
-                            break;
-                        case ">=":
-                            operation_text = "sge";
-                            break;
-                        case "<=":
-                            operation_text = "sle";
-                            break;
-                        default:
-                            operation_text = "error";
-                            break;
-                    }
-                    if (operation_text.equals("error")) {
-                        error(ctx.getStart().getLine(), "unsupported operation");
-                    }
-                    if (type1.equals("int")) {
-                        LLVMGenerator.icmp_vars(resolveScope(ID), resolveScope(value), "i32", operation_text);
-                        stack.push(new Value("bool", "%" + (LLVMGenerator.reg - 1)));
-                    } else if (type1.equals("real")) {
-                        LLVMGenerator.icmp_vars(resolveScope(ID), resolveScope(value), "double", operation_text);
-                        stack.push(new Value("bool", "%" + (LLVMGenerator.reg - 1)));
+                                break;
+                            case "<":
+                                operation_text = "slt";
+                                break;
+                            case ">":
+                                operation_text = "sgt";
+                                break;
+                            case ">=":
+                                operation_text = "sge";
+                                break;
+                            case "<=":
+                                operation_text = "sle";
+                                break;
+                            default:
+                                operation_text = "error";
+                                break;
+                        }
+                        if (operation_text.equals("error")) {
+                            error(ctx.getStart().getLine(), "unsupported operation");
+                        }
+                        if (type1.equals("int")) {
+                            LLVMGenerator.icmp_vars(resolveScope(ID), resolveScope(value), "i32", operation_text);
+                            stack.push(new Value("bool", "%" + (LLVMGenerator.reg - 1)));
+                        } else if (type1.equals("real")) {
+                            LLVMGenerator.icmp_vars(resolveScope(ID), resolveScope(value), "double", operation_text);
+                            stack.push(new Value("bool", "%" + (LLVMGenerator.reg - 1)));
+                        } else {
+                            error(ctx.getStart().getLine(), "unsupported type");
+                        }
                     } else {
-                        error(ctx.getStart().getLine(), "unsupported type");
+                        error(ctx.getStart().getLine(), "variables have different types");
                     }
                 } else {
-                    error(ctx.getStart().getLine(), "variables have different types");
+                    error(ctx.getStart().getLine(), "variable not defined");
                 }
-            } else {
-                error(ctx.getStart().getLine(), "variable not defined");
-            }
 
-        } else {
+            } else {
                 if (globalVariables.containsKey(ID) || variables.containsKey(ID)) {
                     String type = "";
                     if (globalVariables.containsKey(ID)) {
@@ -523,37 +526,37 @@ public class LLVMActions extends SimpleLangBaseListener {
                         case "==":
                             operation_text = "eq";
                             break;
-                    case "!=":
-                        operation_text = "ne";
-                        break;
-                    case "<":
-                        operation_text = "ult";
-                        break;
-                    case ">":
-                        operation_text = "ugt";
-                        break;
-                    case ">=":
-                        operation_text = "uge";
-                        break;
-                    case "<=":
-                        operation_text = "ule";
-                        break;
-                    default:
-                        operation_text = "error";
-                        break;
-                }
-                if (operation_text.equals("error")) {
-                    error(ctx.getStart().getLine(), "unsupported operation");
-                }
-                if (type.equals("int")) {
-                    LLVMGenerator.icmp_constant(resolveScope(ID), value, "i32", operation_text);
-                    stack.push(new Value("bool", "%" + (LLVMGenerator.reg - 1)));
-                } else if (type.equals("real")) {
-                    LLVMGenerator.icmp_constant(resolveScope(ID), value, "double", operation_text);
-                    stack.push(new Value("bool", "%" + (LLVMGenerator.reg - 1)));
-                } else {
-                    error(ctx.getStart().getLine(), "unsupported type");
-                }
+                        case "!=":
+                            operation_text = "ne";
+                            break;
+                        case "<":
+                            operation_text = "ult";
+                            break;
+                        case ">":
+                            operation_text = "ugt";
+                            break;
+                        case ">=":
+                            operation_text = "uge";
+                            break;
+                        case "<=":
+                            operation_text = "ule";
+                            break;
+                        default:
+                            operation_text = "error";
+                            break;
+                    }
+                    if (operation_text.equals("error")) {
+                        error(ctx.getStart().getLine(), "unsupported operation");
+                    }
+                    if (type.equals("int")) {
+                        LLVMGenerator.icmp_constant(resolveScope(ID), value, "i32", operation_text);
+                        stack.push(new Value("bool", "%" + (LLVMGenerator.reg - 1)));
+                    } else if (type.equals("real")) {
+                        LLVMGenerator.icmp_constant(resolveScope(ID), value, "double", operation_text);
+                        stack.push(new Value("bool", "%" + (LLVMGenerator.reg - 1)));
+                    } else {
+                        error(ctx.getStart().getLine(), "unsupported type");
+                    }
                 } else {
                     error(ctx.getStart().getLine(), "variable not defined");
                 }
@@ -601,28 +604,28 @@ public class LLVMActions extends SimpleLangBaseListener {
         String type = ctx.type().getText();
         functions.put(id, new ArrayList<String>());
         functions.get(id).add(type);
-        if(type.equals("int")){
+        if (type.equals("int")) {
             type = "i32";
-        } else if(type.equals("real")){
+        } else if (type.equals("real")) {
             type = "double";
         } else {
             error(ctx.getStart().getLine(), "unsupported return parameter");
         }
         LLVMGenerator.functionstart(id, type);
         SimpleLangParser.FparamsContext fp = ctx.fparams();
-        while(fp != null){
+        while (fp != null) {
             SimpleLangParser.FparamsContext nfp = fp.fparams();
             String paramId = fp.ID().getText();
             String paramType = fp.type().getText();
             variables.put(paramId, paramType);
             functions.get(id).add(paramType);
             boolean last = false;
-            if(nfp == null){
+            if (nfp == null) {
                 last = true;
             }
-            if(paramType.equals("int")){
+            if (paramType.equals("int")) {
                 paramType = "i32";
-            } else if(paramType.equals("real")){
+            } else if (paramType.equals("real")) {
                 paramType = "double";
             } else {
                 error(ctx.getStart().getLine(), "unsupported function parameter");
@@ -633,16 +636,16 @@ public class LLVMActions extends SimpleLangBaseListener {
     }
 
     @Override
-    public void exitReturnstatement(SimpleLangParser.ReturnstatementContext ctx){
+    public void exitReturnstatement(SimpleLangParser.ReturnstatementContext ctx) {
         String ID = ctx.ID().getText();
         String TYPE = variables.get(ID);
-        if(TYPE == null){
+        if (TYPE == null) {
             error(ctx.getStart().getLine(), "variable not defined");
         }
-        if(TYPE.equals("int")){
+        if (TYPE.equals("int")) {
             LLVMGenerator.loadInt(resolveScope(ID));
             TYPE = "i32";
-        } else if(TYPE.equals("real")){
+        } else if (TYPE.equals("real")) {
             LLVMGenerator.loadReal(resolveScope(ID));
             TYPE = "double";
         } else {
