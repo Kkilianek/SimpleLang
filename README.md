@@ -74,8 +74,8 @@ Instrukcja warunkowa pozwala na sterowanie przebiegiem działania programu. Oper
 - != - nierówność
 - < - mniejsze
 - <= - mniejsze równe
--  > - większe
--  >= - większe równe
+- \> - większe
+- \>= - większe równe
 
 Składnia instrukcji warunkowej:
 
